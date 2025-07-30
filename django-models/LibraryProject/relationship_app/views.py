@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView
-from .models import Book, Library, Author # Import Author as well
+from .models import Book, Author # Import Author as well
+from .models import Library
 
 # Function-based View to list all books
 def book_list_view(request):
@@ -13,7 +14,7 @@ def book_list_view(request):
 # Class-based View to display details for a specific library
 class LibraryDetailView(DetailView):
     model = Library
-    template_name = 'library_detail.html'
+    template_name = 'relationship_app/library_detail.html'
     context_object_name = 'library' # The object will be available as 'library' in the template
 
     # Override get_context_data to add related books (though DetailView handles library.books.all directly)
