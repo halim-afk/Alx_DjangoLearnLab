@@ -3,13 +3,13 @@ Command: Delete the book you created and confirm the deletion by trying to retri
 # Retrieve the book to delete.
 # Ensure you retrieve the correct book. If the title was updated, use the updated title.
 try:
-    book_to_delete = Book.objects.get(title="Nineteen Eighty-Four")
+    book = Book.objects.get(title="Nineteen Eighty-Four")
 except Book.DoesNotExist:
     # Fallback in case the title was not updated or shell session was reset
-    book_to_delete = Book.objects.get(title="1984")
+    book = Book.objects.get(title="1984")
 
 # Delete the book
-book_to_delete.delete()
+book.delete()
 
 # Confirm deletion by trying to retrieve all books again
 all_books_after_deletion = Book.objects.all()
