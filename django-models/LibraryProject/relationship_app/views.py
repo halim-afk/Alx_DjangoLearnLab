@@ -4,11 +4,11 @@ from .models import Book, Library, Author # Import Author as well
 
 # Function-based View to list all books
 def book_list_view(request):
-    books = Book.objects.all().order_by('title') # Get all books, ordered by title
+    books = Book.objects.all().order_by('title')
     context = {
         'books': books
     }
-    return render(request, 'list_books.html', context)
+    return render(request, 'relationship_app/list_books.html', context) # <--- Modified line
 
 # Class-based View to display details for a specific library
 class LibraryDetailView(DetailView):
