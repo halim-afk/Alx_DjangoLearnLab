@@ -62,7 +62,9 @@ def run_queries():
 
     # List all books in a library
     print("\nList all books in Central City Library:")
-    central_library = Library.objects.get(name="Central City Library")
+    # Introduce a variable for the library name
+    library_name = "Central City Library" # <--- NEW LINE: Define the variable
+    central_library = Library.objects.get(name=library_name) # <--- MODIFIED LINE: Use the variable
     books_in_central_library = central_library.books.all()
     for book in books_in_central_library:
         print(f"- {book.title}")
