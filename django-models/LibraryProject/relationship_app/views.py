@@ -10,14 +10,13 @@ def list_books(request):
     context = {
         'books': books
     }
-    return render(request, 'list_books.html', context) # <--- Corrected
-
+    return render(request, 'relationship_app/list_books.html', context)
 # Class-based View to display details for a specific library
 class LibraryDetailView(DetailView):
     model = Library
     template_name = 'library_detail.html' # <--- Corrected
     context_object_name = 'library'
-    
+
     # Override get_context_data to add related books (though DetailView handles library.books.all directly)
     # This is more for complex scenarios, but good to know
     def get_context_data(self, **kwargs):
