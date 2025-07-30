@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, 
+from django.views.generic.detail import DetailView
 from .models import Book, Author # Import Author as well
 from .models import Library
 
