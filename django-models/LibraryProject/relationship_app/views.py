@@ -5,7 +5,7 @@ from .models import Book, Author # Import Author as well
 from .models import Library
 
 # Function-based View to list all books
-def book_list_view(request):
+def list_books(request):
     books = Book.objects.all().order_by('title')
     context = {
         'books': books
