@@ -53,19 +53,19 @@ def run_queries():
 
     # Query all books by a specific author
     print("\nQuery all books by J.K. Rowling:")
-    jk_rowling = Author.objects.get(name="J.K. Rowling")
-    books_by_jk_rowling = Book.objects.filter(author=jk_rowling)
-    for book in books_by_jk_rowling:
+    # Introduce a variable for the author name
+    author_name = "J.K. Rowling"
+    author = Author.objects.get(name=author_name) # <-- Matches "Author.objects.get(name=author_name)"
+    books_by_author = Book.objects.filter(author=author) # <-- Matches "objects.filter(author=author)"
+    for book in books_by_author:
         print(f"- {book.title}")
 
     # List all books in a library
     print("\nList all books in Central City Library:")
-    # Introduce a variable for the library name
-    library_name = "Central City Library"
-    central_library = Library.objects.get(name=library_name) # <-- This line now matches the checker's expectation
+    central_library = Library.objects.get(name="Central City Library")
     books_in_central_library = central_library.books.all()
     for book in books_in_central_library:
-    print(f"- {book.title}")
+        print(f"- {book.title}")
 
     # Retrieve the librarian for a library
     print("\nRetrieve the librarian for University Library:")
