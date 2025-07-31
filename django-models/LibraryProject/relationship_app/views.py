@@ -11,6 +11,11 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
+
+@user_passes_test(lambda u: u.is_authenticated and u.userprofile.role == 'Admin')
+   def admin_view(request):
+       return render(request, 'relationship_app/admin_view.html')
+      
 def check_role(role):
      def decorator(user):
         return user.is_authenticated and user.userprofile.role == role
