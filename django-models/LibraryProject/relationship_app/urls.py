@@ -3,6 +3,15 @@ from .views import list_books, LibraryDetailView
 from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 from .views import RegisterView
+from . import views
+from django.urls import path
+
+urlpatterns = [
+    path('register/', views.register, name='register'),
+    # add other paths here...
+]
+
+
 
 urlpatterns = [
     path('login/', LoginView.as_view(template_name='relationship_app/login.html'), name='login'),
