@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -123,3 +124,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+LOGIN_REDIRECT_URL = 'home'  # أو أي مسار ترغب في إعادة التوجيه إليه بعد تسجيل الدخول
+LOGOUT_REDIRECT_URL = 'login'  # أو أي مسار ترغب في إعادة التوجيه إليه بعد تسجيل الخروج
+
