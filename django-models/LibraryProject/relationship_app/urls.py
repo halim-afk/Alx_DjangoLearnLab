@@ -1,4 +1,4 @@
-[23:33, 31/07/2025] Chatgpt: from django.urls import path
+from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
 from .views import (
     list_books, LibraryDetailView, RegisterView,
@@ -18,6 +18,7 @@ urlpatterns = [
     path('books/add/', add_book, name='add_book'),
     path('books/<int:pk>/edit/', edit_book, name='edit_book'),
     path('books/<int:pk>/delete/', delete_book, name='delete_book'),
+    
 
     # Library detail
     path('library/<int:pk>/', LibraryDetailView.as_view(), name='library_detail'),
