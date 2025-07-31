@@ -1,42 +1,32 @@
-from django.shortcuts import render
-from .models import Book
-from django.views.generic.detail import DetailView  # Import class-based detail view
-from .models import Library  # Import the Library model
-from django.shortcuts import render, redirect
-from django.contrib.auth.views import LoginView, LogoutView
-from django.views import View
-from .forms import RegisterForm
-from django.shortcuts import render, redirect
-from django.contrib.auth import login
-from django.contrib.auth.forms import UserCreationForm
-from django.shortcuts import render
-from django.contrib.auth.decorators import user_passes_test
-[23:08, 31/07/2025] Chatgpt: from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import permission_required
-from .models import Book
-from .forms import BookForm
 
+python
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import login
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import user_passes_test, permission_required
+from django.views import View
+from django.views.generic.detail import DetailView
+
+from.models import Book, Library
+from.forms import BookForm, RegisterForm
+
+# ===== عروض إدارة الكتب =====
 @permission_required('relationship_app.can_add_book', login_url='/login/')
 def add_book(request):
-    if request.method == 'POST':
-        form = BookForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('book_list')  # تأكد من وجود هذا العرض
-    else:
-        form = BookForm()
+    form = BookForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect('list_books')
     return render(request, 'relationship_app/book_form.html', {'form': form})
 
 @permission_required('relationship_app.can_change_book', login_url='/login/')
 def edit_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
-    if request.method == 'POST':
-        form = BookForm(request.POST, instance=book)
-        if form.is_valid():
-            form.save()
-            return redirect('book_list')  # تأكد من وجود هذا العرض
-    else:
-        form = BookForm(instance=book)
+    form = BookForm(request.POST or None, instance=book)
+    if form.is_valid():
+        form.save()
+        return redirect('list_books')
     return render(request, 'relationship_app/book_form.html', {'form': form})
 
 @permission_required('relationship_app.can_delete_book', login_url='/login/')
@@ -44,16 +34,23 @@ def delete_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
     if request.method == 'POST':
         book.delete()
-        return redirect('book_list')  # تأكد من وجود هذا العرض
+        return redirect('list_books')
     return render(request, 'relationship_app/book_confirm_delete.html', {'book': book})
 
-@user_passes_test(lambda u: u.is_authenticated and u.userprofile.role == 'Admin')
-   def admin_view(request):
-       return render(request, 'relationship_app/admin_view.html')
-      
+def list_books(request):
+    books = Book.objects.all()
+    return render(request, 'relationship_app/list_books.html', {'books': books})
+
+# ===== تفاصيل المكتبة =====
+class LibraryDetailView(DetailView):
+    model = Library
+    template_name = 'relationship_app/library_detail.html'
+    context_object_name = 'library'
+
+# ===== إدارة صلاحيات المستخدم =====
 def check_role(role):
-     def decorator(user):
-        return user.is_authenticated and user.userprofile.role == role
+    def decorator(user):
+        return user.is_authenticated and getattr(user.userprofile, 'role', None) == role
     return user_passes_test(decorator)
 
 @check_role('Admin')
@@ -68,19 +65,15 @@ def librarian_view(request):
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
 
+# ===== التسجيل =====
 def register(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)  # Log the user in automatically after registration
-            return redirect('login')  # Redirect to login page or any other page
-    else:
-        form = UserCreationForm()
+    form = UserCreationForm(request.POST or None)
+    if form.is_valid():
+        user = form.save()
+        login(request, user)
+        return redirect('login')
     return render(request, 'relationship_app/register.html', {'form': form})
 
-
-View for user registration
 class RegisterView(View):
     def get(self, request):
         form = RegisterForm()
@@ -91,15 +84,4 @@ class RegisterView(View):
         if form.is_valid():
             form.save()
             return redirect('login')
-     return render(request, 'relationship_app/register.html', {'form': form})
-
-
-
-def list_books(request):
-    books = Book.objects.all()  # Get all books from the database
-    return render(request, 'relationship_app/list_books.html', {'books': books})  # Render the book list template
-
-class LibraryDetailView(DetailView):
-    model = Library  # Use the Library model
-    template_name = 'relationship_app/library_detail.html'  # Template to render
-    context_object_name = 'library'  # Name used in the template to refer to the object
+        return render(request, 'relationship_app/register.html', {'form': form})

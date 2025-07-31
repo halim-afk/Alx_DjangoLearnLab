@@ -1,40 +1,29 @@
-from django.urls import path
-from .views import list_books, LibraryDetailView
-from django.urls import path
+[23:33, 31/07/2025] Chatgpt: from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
-from .views import RegisterView
-from . import views
-from django.urls import path
-from django.urls import path
-from . import views
+from .views import (
+    list_books, LibraryDetailView, RegisterView,
+    add_book, edit_book, delete_book,
+    admin_view, librarian_view, member_view,
+    register
+)
 
 urlpatterns = [
-    path('books/add/', views.add_book, name='add_book'),
-    path('books/<int:pk>/edit/', views.edit_book, name='edit_book'),
-    path('books/<int:pk>/delete/', views.delete_book, name='delete_book'),
-    # تأكد من وجود العرض 'book_list' أو قم بإضافته
-]
-
-urlpatterns = [
-    path('admin-view/', views.admin_view, name='admin_view'),
-    path('librarian-view/', views.librarian_view, name='librarian_view'),
-    path('member-view/', views.member_view, name='member_view'),
-]
-
-urlpatterns = [
-    path('register/', views.register, name='register'),
-    # add other paths here...
-]
-
-
-
-urlpatterns = [
+    # Authentication
     path('login/', LoginView.as_view(template_name='relationship_app/login.html'), name='login'),
     path('logout/', LogoutView.as_view(template_name='relationship_app/logout.html'), name='logout'),
     path('register/', RegisterView.as_view(), name='register'),
-]
 
-urlpatterns = [
+    # Book views
     path('books/', list_books, name='list_books'),
+    path('books/add/', add_book, name='add_book'),
+    path('books/<int:pk>/edit/', edit_book, name='edit_book'),
+    path('books/<int:pk>/delete/', delete_book, name='delete_book'),
+
+    # Library detail
     path('library/<int:pk>/', LibraryDetailView.as_view(), name='library_detail'),
+
+    # Role-based views
+    path('admin-view/', admin_view, name='admin_view'),
+    path('librarian-view/', librarian_view, name='librarian_view'),
+    path('member-view/', member_view, name='member_view'),
 ]
