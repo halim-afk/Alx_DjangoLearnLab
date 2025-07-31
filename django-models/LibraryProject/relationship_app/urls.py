@@ -7,24 +7,25 @@ from .views import (
     register
 )
 
+from . import views
+
 urlpatterns = [
-    # Authentication
-    path('login/', LoginView.as_view(template_name='relationship_app/login.html'), name='login'),
-    path('logout/', LogoutView.as_view(template_name='relationship_app/logout.html'), name='logout'),
-    path('register/', RegisterView.as_view(), name='register'),
+    # مسارات إدارة الكتب
+    path('books/add/', views.add_book, name='add_book'),
+    path('books/<int:pk>/edit/', views.edit_book, name='edit_book'),
+    path('books/<int:pk>/delete/', views.delete_book, name='delete_book'),
 
-    # Book views
-    path('books/', list_books, name='list_books'),
-    path('books/add/', add_book, name='add_book'),
-    path('books/<int:pk>/edit/', edit_book, name='edit_book'),
-    path('books/<int:pk>/delete/', delete_book, name='delete_book'),
-    
+    # مسارات أخرى
+    path('books/', views.list_books, name='list_books'),
+    path('library/<int:pk>/', views.LibraryDetailView.as_view(), name='library_detail'),
 
-    # Library detail
-    path('library/<int:pk>/', LibraryDetailView.as_view(), name='library_detail'),
+    # مسارات التحكم في الأدوار
+    path('admin-view/', views.admin_view, name='admin_view'),
+    path('librarian-view/', views.librarian_view, name='librarian_view'),
+    path('member-view/', views.member_view, name='member_view'),
 
-    # Role-based views
-    path('admin-view/', admin_view, name='admin_view'),
-    path('librarian-view/', librarian_view, name='librarian_view'),
-    path('member-view/', member_view, name='member_view'),
+    # مسارات المصادقة
+    path('register/', views.register, name='register'),
+    path('login/', views.LoginView.as_view(template_name='relationship_app/login.html'), name='login'),
+    path('logout/', views.LogoutView.as_view(template_name='relationship_app/logout.html'), name='logout'),
 ]
