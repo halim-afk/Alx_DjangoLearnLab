@@ -7,7 +7,5 @@ urlpatterns = [
     path('', include('relationship_app.urls')),
     path('books/', list_books, name='book-list'),
     path('library/<int:pk>/', LibraryDetailView.as_view(), name='library-detail'),
-    path('add_book/', views.add_book, name='add_book'),
-    path('edit_book/', views.edit_book, name='edit_book'),
-    path('books/<int:pk>/delete/', views.delete_book, name='delete_book'),
+   
 ]
