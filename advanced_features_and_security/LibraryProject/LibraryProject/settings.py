@@ -129,3 +129,13 @@ LOGIN_REDIRECT_URL = 'home'  # أو أي مسار ترغب في إعادة ال�
 LOGOUT_REDIRECT_URL = 'login'  # أو أي مسار ترغب في إعادة التوجيه إليه بعد تسجيل الخروج
 
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
+DEBUG = False  # تعطيل وضع التصحيح في بيئة الإنتاج
+
+SECURE_BROWSER_XSS_FILTER = True  # تفعيل فلتر XSS في المتصفح
+X_FRAME_OPTIONS = 'DENY'  # منع تضمين الموقع داخل إطارات
+SECURE_CONTENT_TYPE_NOSNIFF = True  # منع المتصفح من تخمين نوع المحتوى
+
+CSRF_COOKIE_SECURE = True  # إرسال كوكي CSRF فقط عبر HTTPS
+SESSION_COOKIE_SECURE = True  # إرسال كوكي الجلسة فقط عبر HTTPS
+
+
