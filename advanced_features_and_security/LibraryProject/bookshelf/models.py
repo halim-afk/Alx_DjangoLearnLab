@@ -1,6 +1,11 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+class ExampleForm(forms.ModelForm):
+    class Meta:
+        model = Book
+        fields = ['title', 'author', 'published_date']
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, date_of_birth, password=None, **extra_fields):
@@ -59,7 +64,7 @@ class Book(models.Model):
         verbose_name = "Book"
         verbose_name_plural = "Books"
         ordering = ['title'] # Order books by title by default
-        
+
     permissions = [
             ("can_view", "Can view book"),
             ("can_create", "Can create book"),
