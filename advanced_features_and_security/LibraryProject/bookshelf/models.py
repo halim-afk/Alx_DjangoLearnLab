@@ -20,7 +20,7 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractUser):
     date_of_birth = models.DateField(null=True, blank=True)
     profile_photo = models.ImageField(upload_to='profile_photos/', null=True, blank=True)
-[15:53, 01/08/2025] Chatgpt: objects = CustomUserManager()
+    objects = CustomUserManager()
 
     def str(self):
         return self.username
@@ -59,3 +59,11 @@ class Book(models.Model):
         verbose_name = "Book"
         verbose_name_plural = "Books"
         ordering = ['title'] # Order books by title by default
+        
+    permissions = [
+            ("can_view", "Can view book"),
+            ("can_create", "Can create book"),
+            ("can_edit", "Can edit book"),
+            ("can_delete", "Can delete book"),
+        ]
+    

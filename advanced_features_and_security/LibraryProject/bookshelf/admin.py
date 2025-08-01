@@ -13,7 +13,6 @@ class CustomUserAdmin(UserAdmin):
         (None, {'fields': ('date_of_birth', 'profile_photo')}),
     )
 
-admin.site.register(CustomUser, CustomUserAdmin)
 
 
 # Define the custom admin class for the Book model
