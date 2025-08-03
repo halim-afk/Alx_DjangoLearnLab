@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bookshelf',
     'relationship_app',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -126,4 +127,5 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'home'  # أو أي مسار ترغب في إعادة التوجيه إليه بعد تسجيل الدخول
 LOGOUT_REDIRECT_URL = 'login'  # أو أي مسار ترغب في إعادة التوجيه إليه بعد تسجيل الخروج
+AUTH_USER_MODEL = 'accounts.CustomUser'
 
