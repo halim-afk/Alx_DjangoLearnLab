@@ -1,73 +1,52 @@
-from rest_framework import viewsets, generics, permissions
-from .models import Author, Book
-from .serializers import AuthorSerializer, BookSerializer
+from rest_framework import generics, viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from .models import Book, Author
+from .serializers import BookSerializer, AuthorSerializer
 
+# --------------------------
+# Generic Views for Books
+# --------------------------
 
-# ------------------------
-# Generic Views for Book
-# ------------------------
-
-# ListView - retrieves all books with optional year filter
 class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.AllowAny]  # Public read access
-
-    # Custom filtering by publication year if provided in query params
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        year = self.request.query_params.get('year')
-        if year:
-            queryset = queryset.filter(publication_year=year)
-        return queryset
+    permission_classes = [IsAuthenticatedOrReadOnly]  # يمكن للجميع قراءة، والتعديل يتطلب تسجيل دخول
 
 
-# DetailView - retrieves a single book by ID
 class BookDetailView(generics.RetrieveAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.AllowAny]  # Public read access
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
-# CreateView - adds a new book (authenticated users only)
 class BookCreateView(generics.CreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]  # Only logged-in users can create
-
-    def perform_create(self, serializer):
-        # Here you could attach the current user as the author if your Book model had a user field
-        serializer.save()
+    permission_classes = [IsAuthenticated]  # الإنشاء يتطلب تسجيل دخول
 
 
-# UpdateView - modifies an existing book (authenticated users only)
 class BookUpdateView(generics.UpdateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]  # Only logged-in users can update
-
-    def perform_update(self, serializer):
-        serializer.save()
+    permission_classes = [IsAuthenticated]  # التعديل يتطلب تسجيل دخول
 
 
-# DeleteView - removes a book (authenticated users only)
 class BookDeleteView(generics.DestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]  # Only logged-in users can delete
+    permission_classes = [IsAuthenticated]  # الحذف يتطلب تسجيل دخول
 
+# --------------------------
+# ViewSets
+# --------------------------
 
-# ------------------------
-# ViewSets for CRUD
-# ------------------------
-
-# ViewSet for Author CRUD operations
 class AuthorViewSet(viewsets.ModelViewSet):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
 
-# ViewSet for Book CRUD operations
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
