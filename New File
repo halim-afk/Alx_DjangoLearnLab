@@ -1,0 +1,4 @@
+efault via 192.168.247.253 dev wlp2s0 proto dhcp src 192.168.247.241 metric 20600 
+192.168.247.0/24 dev wlp2s0 proto kernel scope link src 192.168.247.241 metric 600 
+
+
