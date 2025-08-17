@@ -13,6 +13,11 @@ from .views import (
     CommentUpdateView,
     CommentDeleteView
 )
+from .views import (
+    # ... other imports ...
+    TaggedPostListView, # This is the view for listing posts by tag
+    SearchResultsView
+    )
 
 
 # blog/urls.py
@@ -54,5 +59,6 @@ urlpatterns = [
     path('tags/<slug:tag_slug>/', TaggedPostListView.as_view(), name='posts_by_tag'), # This line defines the URL
     # URL for search results
     path('search/', SearchResultsView.as_view(), name='search_results'),
+    
 ]
 
