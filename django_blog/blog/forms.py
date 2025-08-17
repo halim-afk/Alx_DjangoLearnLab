@@ -4,6 +4,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 from .models import Profile, Post # Import the Post model
+from .models import Post, Comment
 
 # Custom User Creation Form to include email (for registration)
 class CustomUserCreationForm(UserCreationForm):
@@ -75,3 +76,14 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ['bio', 'avatar']
 
+# New: Form for Comment creation and update
+class CommentForm(forms.ModelForm):
+    """
+    Form for creating and updating Comment objects.
+    """
+    class Meta:
+        model = Comment
+        fields = ['content'] # Only content is directly input by the user
+        widgets = {
+            'content': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Write your comment here...', 'rows': 4}),
+        }

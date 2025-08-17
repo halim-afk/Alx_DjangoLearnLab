@@ -1,10 +1,10 @@
 # blog/views.py
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin # Mixins for class-based views
-from django.contrib import messages # For displaying user feedback messages
-from django.urls import reverse_lazy # For success_url in generic views, ensures URL is resolved after app load
-from django.views.generic import ( # Import generic class-based views for CRUD
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib import messages
+from django.urls import reverse_lazy, reverse # Import reverse for dynamic URLs
+from django.views.generic import (
     ListView,
     DetailView,
     CreateView,
@@ -12,8 +12,9 @@ from django.views.generic import ( # Import generic class-based views for CRUD
     DeleteView
 )
 
-from .forms import CustomUserCreationForm, CustomUserChangeForm, PostForm # Import all forms
-from django.contrib.auth import login as auth_login # Import login explicitly to avoid name conflict
+from .models import Post, Comment # Import Comment model
+from .forms import CustomUserCreationForm, CustomUserChangeForm, PostForm, CommentForm # Import CommentForm
+from django.contrib.auth import login as auth_login
 
 
 # --- Authentication Views ---
@@ -160,3 +161,83 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         messages.success(self.request, 'Your post has been deleted successfully!')
         return super().delete(request, *args, **kwargs)
 
+# --- Comment CRUD Views (New) ---
+
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    """
+    Allows authenticated users to create a new comment on a specific post.
+    The post ID is passed in the URL (post_pk).
+    """
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_form.html' # Use a separate template for comment creation/editing
+
+    def form_valid(self, form):
+        """
+        Overrides form_valid to set the 'post' and 'author' fields of the comment
+        before saving.
+        """
+        post = get_object_or_404(Post, pk=self.kwargs['post_pk']) # Get the Post object from URL kwargs
+        form.instance.post = post # Link the comment to the correct post
+        form.instance.author = self.request.user # Set the author to the logged-in user
+        messages.success(self.request, 'Your comment has been posted successfully!')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        """
+        After successfully creating a comment, redirect back to the post's detail page.
+        """
+        return reverse('post_detail', kwargs={'pk': self.kwargs['post_pk']})
+
+
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """
+    Allows the author of a comment to edit their own comment.
+    """
+    model = Comment
+    form_class = CommentForm
+    template_name = 'blog/comment_form.html'
+
+    def form_valid(self, form):
+        """
+        Ensures the comment's author and post association remain unchanged.
+        """
+        messages.success(self.request, 'Your comment has been updated successfully!')
+        return super().form_valid(form)
+
+    def test_func(self):
+        """
+        Checks if the logged-in user is the author of the comment being updated.
+        """
+        comment = self.get_object()
+        return self.request.user == comment.author
+
+    def get_success_url(self):
+        """
+        After successfully updating a comment, redirect back to the post's detail page.
+        """
+        return reverse('post_detail', kwargs={'pk': self.object.post.pk})
+
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    """
+    Allows the author of a comment to delete their own comment.
+    """
+    model = Comment
+    template_name = 'blog/comment_confirm_delete.html' # Confirmation template for deletion
+
+    def test_func(self):
+        """
+        Checks if the logged-in user is the author of the comment being deleted.
+        """
+        comment = self.get_object()
+        return self.request.user == comment.author
+
+    def get_success_url(self):
+        """
+        After successfully deleting a comment, redirect back to the post's detail page.
+        """
+        # Ensure 'self.object' is available before deletion is performed
+        post_pk = self.get_object().post.pk
+        messages.success(self.request, 'Your comment has been deleted successfully!')
+        return reverse('post_detail', kwargs={'pk': post_pk})

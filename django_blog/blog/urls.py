@@ -1,14 +1,19 @@
+
 from django.urls import path
-from .views import UserLoginView, UserLogoutView, register, profile
-from django.contrib.auth import views as auth_views # Django's built-in auth views
-from . import views # Your custom views
-from .views import ( # Import specific class-based views for clarity
+from django.contrib.auth import views as auth_views
+from . import views
+from .views import (
     PostListView,
     PostDetailView,
     PostCreateView,
     PostUpdateView,
-    PostDeleteView
+    PostDeleteView,
+    # New: Import comment views
+    CommentCreateView,
+    CommentUpdateView,
+    CommentDeleteView
 )
+
 
 # blog/urls.py
 
@@ -35,4 +40,12 @@ urlpatterns = [
     path('post/<int:pk>/edit/', PostUpdateView.as_view(), name='post_edit'), # This is the "update" URL
     # Delete an existing post (uses primary key 'pk')
     path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post_delete'),
+
+    # --- Comment URLs (New) ---
+    # URL for creating a comment on a specific post
+    path('post/<int:post_pk>/comment/new/', CommentCreateView.as_view(), name='comment_create'),
+    # URL for editing a specific comment
+    path('comment/<int:pk>/edit/', CommentUpdateView.as_view(), name='comment_edit'),
+    # URL for deleting a specific comment
+    path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment_delete'),
 ]

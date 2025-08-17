@@ -1,0 +1,47 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <h2>{% if form.instance.pk %}Edit Your Comment{% else %}Add Comment to "{{ post.title }}"{% endif %}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                    <small>{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <p style="color: red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn">{% if form.instance.pk %}Update Comment{% else %}Post Comment{% endif %}</button>
+    </form>
+    <p style="margin-top: 20px;">
+        <a href="{% if form.instance.pk %}{% url 'post_detail' pk=form.instance.post.pk %}{% else %}{% url 'post_detail' pk=view.kwargs.post_pk %}{% endif %}"
+           class="btn" style="background-color: #6c757d;">Cancel</a>
+    </p>
+{% endblock %}
+```html
+<!-- blog/templates/blog/comment_confirm_delete.html (New template for comment deletion confirmation) -->
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <h2>Confirm Comment Deletion</h2>
+    <p>Are you sure you want to delete this comment?</p>
+    <div class="comment-item" style="border: 1px solid #dc3545; background-color: #f8d7da;">
+        <div class="comment-meta">
+            <strong>{{ comment.author.username }}</strong> commented on {{ comment.created_at|date:"F d, Y, H:i" }}
+        </div>
+        <div class="comment-content">
+            <p>{{ comment.content|truncatechars:100 }}</p>
+        </div>
+    </div>
+    <p style="color: #dc3545; font-weight: bold; margin-top: 15px;">This action cannot be undone.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn delete-link">Yes, Delete This Comment</button>
+        <a href="{% url 'post_detail' pk=comment.post.pk %}" class="btn" style="background-color: #6c757d;">Cancel</a>
+    </form>
+{% endblock %}
