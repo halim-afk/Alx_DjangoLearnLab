@@ -23,6 +23,7 @@ from .views import (
 # blog/urls.py
 
 
+PostByTagListView.as_view()
 
 
 urlpatterns = [
