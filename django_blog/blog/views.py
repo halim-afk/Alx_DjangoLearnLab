@@ -9,14 +9,10 @@ from django.urls import reverse_lazy
 from forms import RegisterForm, UserUpdateForm, ProfileForm  # type: ignore
 
 # Create your views here.
-
-
-class UserLoginView(LoginView):
-    template_name = 'auth/login.html'
-
-class UserLogoutView(LogoutView):
-    # LOGOUT_REDIRECT_URL handles redirect
-    pass
+# blog/views.py
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 def register(request):
     if request.method == 'POST':
@@ -31,6 +27,35 @@ def register(request):
     else:
         form = RegisterForm()
     return render(request, 'auth/register.html', {'form': form})
+
+def profile(request):
+    return render(request, "profile.html")
+
+def user_login(request):
+    if request.method == "POST":
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect("profile")
+    else:
+        form = AuthenticationForm()
+    return render(request, "login.html", {"form": form})
+
+def user_logout(request):
+    logout(request)
+    return redirect("login")
+
+
+
+class UserLoginView(LoginView):
+    template_name = 'auth/login.html'
+
+class UserLogoutView(LogoutView):
+    # LOGOUT_REDIRECT_URL handles redirect
+    pass
+
+
 
 @login_required
 def profile(request):
