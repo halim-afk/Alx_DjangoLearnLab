@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 from .models import Profile, Post # Import the Post model
 from .models import Post, Comment
-from taggit.forms import TagWidget # NEW: Import TagWidget for better tag input styling
+from taggit.forms import TagWidget() # NEW: Import TagWidget for better tag input styling
 
 
 # Custom User Creation Form to include email (for registration)
