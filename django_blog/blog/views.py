@@ -15,7 +15,8 @@ from django.views.generic import (
 from .models import Post, Comment # Import Comment model
 from .forms import CustomUserCreationForm, CustomUserChangeForm, PostForm, CommentForm # Import CommentForm
 from django.contrib.auth import login as auth_login
-
+from django.db.models import Q # NEW: Import Q object for complex queries
+from taggit.models import Tag # NEW: Import Tag model from taggit
 
 # --- Authentication Views ---
 
@@ -241,3 +242,67 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         post_pk = self.get_object().post.pk
         messages.success(self.request, 'Your comment has been deleted successfully!')
         return reverse('post_detail', kwargs={'pk': post_pk})
+
+
+class TaggedPostListView(ListView):
+    """
+    Displays posts associated with a specific tag.
+    Accessible to all users.
+    """
+    model = Post
+    template_name = 'blog/post_list.html' # Reuse post_list template
+    context_object_name = 'posts'
+    paginate_by = 5
+
+    def get_queryset(self):
+        """
+        Filters posts by the tag provided in the URL.
+        """
+        tag_slug = self.kwargs['tag_slug'] # Get tag slug from URL
+        tag = get_object_or_404(Tag, slug=tag_slug) # Retrieve Tag object
+        # Filter posts that have this tag
+        return Post.objects.filter(tags__in=[tag])
+
+    def get_context_data(self, **kwargs):
+        """
+        Adds the current tag to the context for display in the template.
+        """
+        context = super().get_context_data(**kwargs)
+        context['current_tag'] = get_object_or_404(Tag, slug=self.kwargs['tag_slug'])
+        return context
+
+class SearchResultsView(ListView):
+    """
+    Displays posts based on a search query across title, content, or tags.
+    Accessible to all users.
+    """
+    model = Post
+    template_name = 'blog/search_results.html' # NEW: Dedicated search results template
+    context_object_name = 'posts'
+    paginate_by = 5
+
+    def get_queryset(self):
+        """
+        Filters posts based on the 'q' (query) parameter in the URL.
+        Searches title, content, and tags.
+        """
+        query = self.request.GET.get('q') # Get the search query
+        if query:
+            # Use Q objects for OR queries across multiple fields
+            # __icontains performs a case-insensitive containment test
+            # tags__name__icontains searches within the names of related tags
+            return Post.objects.filter(
+                Q(title__icontains=query) |
+                Q(content__icontains=query) |
+                Q(tags__name__icontains=query)
+            ).distinct() # Use distinct to avoid duplicate posts if they match multiple criteria
+        return Post.objects.none() # Return an empty queryset if no query
+
+    def get_context_data(self, **kwargs):
+        """
+        Adds the search query to the context for display in the template.
+        """
+        context = super().get_context_data(**kwargs)
+        context['query'] = self.request.GET.get('q', '') # Pass the query back to the template
+        return context
+

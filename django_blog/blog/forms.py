@@ -5,6 +5,8 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 from .models import Profile, Post # Import the Post model
 from .models import Post, Comment
+from taggit.forms import TagWidget # NEW: Import TagWidget for better tag input styling
+
 
 # Custom User Creation Form to include email (for registration)
 class CustomUserCreationForm(UserCreationForm):
@@ -46,10 +48,12 @@ class PostForm(forms.ModelForm):
     """
     class Meta:
         model = Post
-        fields = ['title', 'content'] # Fields that the user will input via the form
+        fields = ['title', 'content', 'tags'] # Fields that the user will input via the form
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter post title'}),
             'content': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Write your post content here...', 'rows': 10}),
+            'tags': TagWidget(attrs={'class': 'form-control', 'placeholder': 'Comma-separated tags (e.g., python, django, webdev)'}), # NEW: Use TagWidget
+
         }
 
 
