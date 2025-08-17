@@ -44,8 +44,6 @@ urlpatterns = [
     # --- Comment URLs (New) ---
     # URL for creating a comment on a specific post
     path('post/<int:post_pk>/comment/new/', CommentCreateView.as_view(), name='comment_create'),
-    # URL for editing a specific comment
-    path('comment/<int:pk>/edit/', CommentUpdateView.as_view(), name='comment_edit'),
     # URL for deleting a specific comment
     path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment_delete'),
 
