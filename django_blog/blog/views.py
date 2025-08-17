@@ -13,6 +13,8 @@ from forms import RegisterForm, UserUpdateForm, ProfileForm  # type: ignore
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login as auth_login # Import login explicitly to avoid name conflict
+
 
 def register(request):
     if request.method == 'POST':
