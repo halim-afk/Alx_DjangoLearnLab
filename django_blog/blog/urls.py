@@ -49,5 +49,10 @@ urlpatterns = [
 
     # URL for updating a specific comment (now using 'update/' and 'comment_update' name)
     path('comment/<int:pk>/update/', CommentUpdateView.as_view(), name='comment_update'),
+    # --- NEW: Tagging and Search URLs ---
+    # URL for viewing posts by a specific tag
+    path('tags/<slug:tag_slug>/', TaggedPostListView.as_view(), name='posts_by_tag'), # This line defines the URL
+    # URL for search results
+    path('search/', SearchResultsView.as_view(), name='search_results'),
 ]
 
