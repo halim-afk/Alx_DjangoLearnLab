@@ -1,0 +1,47 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <div class="post-detail">
+        <h2>{{ post.title }}</h2>
+        <div class="meta">
+            By {{ post.author.username }} on {{ post.published_date|date:"F d, Y, H:i" }}
+            {% if post.created_at != post.updated_at %}
+                (Last updated: {{ post.updated_at|date:"F d, Y, H:i" }})
+            {% endif %}
+        </div>
+        <div class="post-content">
+            <p>{{ post.content|linebreaksbr }}</p> <!-- Display content with line breaks -->
+        </div>
+
+        {% if user.is_authenticated and user == post.author %}
+            <div class="post-actions">
+                <a href="{% url 'post_edit' pk=post.pk %}" class="btn">Edit Post</a>
+                <a href="{% url 'post_delete' pk=post.pk %}" class="btn delete-link">Delete Post</a>
+            </div>
+        {% endif %}
+    </div>
+    <p style="margin-top: 20px;"><a href="{% url 'post_list' %}" class="btn" style="background-color: #6c757d;">&larr; Back to All Posts</a></p>
+{% endblock %}
+```html
+<!-- blog/templates/blog/post_form.html -->
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <h2>{% if form.instance.pk %}Edit Post{% else %}Create New Post{% endif %}</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <p style="color: red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn">{% if form.instance.pk %}Update Post{% else %}Create Post{% endif %}</button>
+    </form>
+{% endblock %}

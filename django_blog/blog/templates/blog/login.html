@@ -19,4 +19,29 @@
         {% endfor %}
         <button type="submit" class="btn">Login</button>
     </form>
+    <p style="margin-top: 20px;">Don't have an account? <a href="{% url 'register' %}" style="color: #3498db; text-decoration: none;">Register here</a>.</p>
+{% endblock %}
+```html
+<!-- blog/templates/blog/register.html -->
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <h2>Register</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}
+                    <small>{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <p style="color: red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn">Register</button>
+    </form>
+    <p style="margin-top: 20px;">Already have an account? <a href="{% url 'login' %}" style="color: #3498db; text-decoration: none;">Log In here</a>.</p>
 {% endblock %}

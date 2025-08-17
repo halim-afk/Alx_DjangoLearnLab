@@ -2,7 +2,7 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
-    <h2>Your Profile</h2>
+    <h2>Your Profile ({{ user.username }})</h2>
     <form method="post">
         {% csrf_token %}
         {% for field in form %}
@@ -19,7 +19,10 @@
         {% endfor %}
         <button type="submit" class="btn">Update Profile</button>
     </form>
-    <p>
-        <a href="{% url 'password_change' %}">Change Password</a> (You'll need to set this URL up separately if you want to enable password changes)
+    <p style="margin-top: 20px;">
+        <!-- Django has built-in views for password change, but they require additional URL/template setup -->
+        <a href="{% url 'admin:password_change' %}" class="btn" style="background-color: #6c757d;">Change Password (Admin)</a> <!-- Link to admin password change for simplicity in this example -->
+        <br>
+        <small>For a user-facing password change, you'd implement `django.contrib.auth.views.PasswordChangeView`.</small>
     </p>
 {% endblock %}

@@ -1,0 +1,13 @@
+<!-- blog/templates/blog/post_confirm_delete.html -->
+{% extends 'blog/base.html' %}
+
+{% block content %}
+    <h2>Confirm Deletion</h2>
+    <p>Are you sure you want to delete the post titled: <strong>"{{ post.title }}"</strong>?</p>
+    <p style="color: #dc3545; font-weight: bold;">This action cannot be undone.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn delete-link">Yes, Delete It</button>
+        <a href="{% url 'post_detail' pk=post.pk %}" class="btn" style="background-color: #6c757d;">Cancel</a>
+    </form>
+{% endblock %}

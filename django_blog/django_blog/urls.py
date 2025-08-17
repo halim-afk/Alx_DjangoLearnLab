@@ -19,6 +19,13 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views import UserLoginView, register ,profile ,UserLogoutView , user_logout, user_login
+from django.views import ( # Import specific class-based views for clarity
+    PostListView,
+    PostDetailView,
+    PostCreateView,
+    PostUpdateView,
+    PostDeleteView
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +34,18 @@ urlpatterns = [
     path('logout/', UserLogoutView.as_view(next_page='login'), name='logout'),
     path('register/', register, name='register'),
     path('profile/', profile, name='profile'),
+
+    # --- Blog Post CRUD URLs ---
+    # Home page: lists all blog posts
+    path('', PostListView.as_view(), name='post_list'),
+    # Create new post
+    path('post/new/', PostCreateView.as_view(), name='post_create'),
+    # View a single post (uses primary key 'pk' to identify the post)
+    path('post/<int:pk>/', PostDetailView.as_view(), name='post_detail'),
+    # Edit an existing post (uses primary key 'pk')
+    path('post/<int:pk>/edit/', PostUpdateView.as_view(), name='post_edit'),
+    # Delete an existing post (uses primary key 'pk')
+    path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post_delete'),
 ]
 
 
