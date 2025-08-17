@@ -22,6 +22,7 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_as_view(template_name='blog/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_as_view(template_name='blog/logout.html'), name='logout'),
     path('profile/', views.profile, name='profile'), # Custom user profile view
+    path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post_update'), # Changed from 'edit' to 'update'
 
     # --- Blog Post CRUD URLs ---
     # Home page: lists all blog posts
