@@ -48,4 +48,8 @@ urlpatterns = [
     path('comment/<int:pk>/edit/', CommentUpdateView.as_view(), name='comment_edit'),
     # URL for deleting a specific comment
     path('comment/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment_delete'),
+
+    # URL for updating a specific comment (now using 'update/' and 'comment_update' name)
+    path('comment/<int:pk>/update/', CommentUpdateView.as_view(), name='comment_update'),
 ]
+
