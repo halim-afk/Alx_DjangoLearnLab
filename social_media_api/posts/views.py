@@ -11,6 +11,14 @@ from rest_framework.pagination import PageNumberPagination
 from notifications.models import Notification # Import Notification model
 from django.contrib.contenttypes.models import ContentType # Import ContentType
 from django.db import IntegrityError # Import IntegrityError
+try:
+    # Try to create a like
+    Like.objects.create(user=request.user, post=post)
+    # ... create notification ...
+    return Response({"message": "Post liked successfully."}, status=status.HTTP_201_CREATED)
+except IntegrityError:
+    return Response({"error": "You have already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
+
 
 Comment.objects.all()
 

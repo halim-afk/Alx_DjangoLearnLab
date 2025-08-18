@@ -8,6 +8,31 @@ from django.contrib.auth import get_user_model
 from .models import Post, Comment, Like # Import Like model
 from django.db import IntegrityError # Import IntegrityError
 
+
+# accounts/serializers.py
+from rest_framework import serializers
+from .models import User # Correct: Only import User from accounts.models
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'bio', 'profile_picture']
+
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password']
+
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data['email'],
+            password=validated_data['password']
+        )
+        return user
+
 User = get_user_model()
 serializers.CharField()
 get_user_model().objects.create_user
