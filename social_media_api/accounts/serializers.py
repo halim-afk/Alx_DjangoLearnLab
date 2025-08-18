@@ -5,10 +5,20 @@ from .models import User
 from rest_framework import serializers
 from .models import Post, Comment
 from django.contrib.auth import get_user_model
+from .models import Post, Comment, Like # Import Like model
+from django.db import IntegrityError # Import IntegrityError
 
 User = get_user_model()
 serializers.CharField()
 get_user_model().objects.create_user
+
+class LikeSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.username')
+    post = serializers.ReadOnlyField(source='post.id')
+
+    class Meta:
+        model = Like
+        fields = ['id', 'user', 'post', 'created_at']
 
 
 
