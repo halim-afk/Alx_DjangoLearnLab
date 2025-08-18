@@ -127,3 +127,4 @@ SESSION_COOKIE_SECURE = True
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEBUG=False
