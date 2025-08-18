@@ -4,6 +4,7 @@ from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
+Comment.objects.all()
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
     """
