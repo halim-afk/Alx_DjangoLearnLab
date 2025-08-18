@@ -9,6 +9,8 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import PostViewSet, CommentListCreateView, CommentRetrieveUpdateDestroyView, UserFeedView, LikePostView # Import LikePostView
 
+from django.urls import path
+from .views import LikePostView
 
 
 
